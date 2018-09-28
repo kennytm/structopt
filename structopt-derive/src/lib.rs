@@ -10,7 +10,6 @@
 //! directly. See [structopt documentation](https://docs.rs/structopt)
 //! for the usage of `#[derive(StructOpt)]`.
 
-extern crate proc_macro;
 extern crate syn;
 #[macro_use]
 extern crate quote;
@@ -23,14 +22,6 @@ use proc_macro2::{Span, TokenStream};
 use syn::punctuated::Punctuated;
 use syn::token::Comma;
 use syn::*;
-
-/// Generates the `StructOpt` impl.
-#[proc_macro_derive(StructOpt, attributes(structopt))]
-pub fn structopt(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let input: DeriveInput = syn::parse(input).unwrap();
-    let gen = impl_structopt(&input);
-    gen.into()
-}
 
 fn sub_type(t: &syn::Type) -> Option<&syn::Type> {
     let segs = match *t {
@@ -426,7 +417,7 @@ fn impl_structopt_for_enum(
     }
 }
 
-fn impl_structopt(input: &DeriveInput) -> TokenStream {
+pub fn impl_structopt(input: &DeriveInput) -> TokenStream {
     use syn::Data::*;
 
     let struct_name = &input.ident;
